@@ -31,6 +31,4 @@ int main(){
 	cout<<calcular()<<'\n';
 }
 
-/// xD
-/***
-***/
+
