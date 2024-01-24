@@ -2,74 +2,59 @@
 using namespace std;
 //Compiler version g++ 6.3.0
 struct nodo{
-	int x,y,z;
-	double t;
+	int y,x,p;
 };
-int n,xf,yf,zf,tmax;
-string mapa[102][102][102];
-bool visitados[102][102][102];
+int movs[12][2];
+int y,x,m,yf,xf;
 queue<nodo>cola;
+bool visitados[1002][1002];
+
 void lectura(){
-	cin>>n>>tmax;
-	cin>>xf>>yf>>zf;
-	for(int i=0;i<n;i++){
-		for(int j=0;j<n;j++){
-			for(int l=0;l<n;l++){
-				cin>>mapa[i][j][l];
-			}
-		}
+	cin>>y>>x>>m;
+	nodo inicial;
+	cin>>inicial.y>>inicial.x;
+	inicial.p=0;
+	cola.push(inicial);
+	visitados[inicial.y][inicial.x]=1;
+	cin>>yf>>xf;
+	for(int i=0;i<m;i++){
+		cin>>movs[i][0];
+		cin>>movs[i][1];
 	}
-	visitados[0][0][0]=1;
-	cola.push({0,0,0,0});
 }
 
-void direccion(nodo &r,int i){
-	if(mapa[r.x][r.y][r.z][i]=='E') r.x++;
-	else if(mapa[r.x][r.y][r.z][i]=='O') r.x--;
-	else if(mapa[r.x][r.y][r.z][i]=='N') r.y++;
-	else if(mapa[r.x][r.y][r.z][i]=='S') r.y--;
-	else if(mapa[r.x][r.y][r.z][i]=='U') r.z++;
-	else if(mapa[r.x][r.y][r.z][i]=='D') r.z--;
-}
-
-bool valido(nodo &r){
-	if(r.x>=0 and r.x<n and r.y>=0 and r.y<n and r.z>=0 and r.z<n 
-	and !visitados[r.x][r.y][r.z]){
-		visitados[r.x][r.y][r.z]=1;
+bool valido(nodo a){
+	if(a.y>=1 and a.y<=y and a.x>=1 and a.x<=x and !visitados[a.y][a.x]){
 		return true;
 	}
 	return false;
 }
 
-double busqueda(){
+int busqueda(){
 	nodo actual,copia;
-	while(!cola.empty()){
+	while(! cola.empty()){
 		actual=cola.front(); cola.pop();
-		if(actual.x==xf and actual.y==yf and actual.z==zf) return actual.t;
-		if(actual.t<tmax){
-			actual.t+=0.5;
-			for(int i=0;i<=mapa[actual.x][actual.y][actual.z].length();i++){
-				copia=actual;
-				direccion(copia,i);
-				if(valido(copia)){
-					cola.push(copia);
-				}
+		if(actual.y==yf and actual.x==xf){
+			return actual.p;
+		}
+		for(int i=0;i<m;i++){
+			copia=actual;
+			copia.y+=movs[i][0];
+			copia.x+=movs[i][1];
+			if(valido(copia)){
+				copia.p++;
+				visitados[copia.y][copia.x]=1;
+				cola.push(copia);
 			}
 		}
 	}
-	return-1;
+	return -1;
 }
 
-int main()
-{
-	lectura();
-	double r;
-	r=busqueda();
-	if(r==-1){
-		cout<<"Impossibru"<<'\n';
-	}else{
-		cout<<r<<'\n';
-	}
-			
-	return 0;
-}
+ int main()
+ {
+ 	lectura();
+ 	cout<<busqueda()<<'\n';
+ 	
+ 	return 0;
+ }
