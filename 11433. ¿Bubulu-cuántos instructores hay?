@@ -1,0 +1,16 @@
+#include <iostream>
+#include <sstream>
+
+int main() {
+    std::string line;
+    getline(std::cin, line);
+    std::istringstream iss(line);
+    std::string name;
+    int count = 0;
+    while (iss >> name) {
+        count++;
+    }
+    std::cout << count << std::endl;
+    return 0;
+}
+
